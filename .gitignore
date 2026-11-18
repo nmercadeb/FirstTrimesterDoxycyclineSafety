@@ -2,7 +2,7 @@
 .Rhistory
 .RData
 .Ruserdata
-**/Data/*
+**/Data/raw/*
 **/Results/**/*.csv
 **/Results/**/*.rds
 **/Analysis/*.docx
@@ -10,3 +10,6 @@
 *.log
 *.zip
 tbss.R
+*.RData
+*.rds
+*.sas7bdat
