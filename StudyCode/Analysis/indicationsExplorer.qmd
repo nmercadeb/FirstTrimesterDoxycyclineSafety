@@ -1,0 +1,97 @@
+---
+title: "Doxycicline Data Explorer"
+format: docx
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+## Indication groups 
+
+```{r}
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+library(visOmopResults)
+library(here)
+
+indication_groups <- list(
+  rti_ear = "rti_ear",
+  rti_other_urti = "rti_other_urti",
+  rti_phrayngitis = "rti_phrayngitis",
+  rti_sinusitis = "rti_sinusitis",
+  rti_lower = c("rti_other_lrti", "rti_pneumonia"),
+  chlamydial_infections = "chlamydial_infections",
+  sti_other = c("other_sti", "endocervical_infection", "gonoccoccal_infections", "chancroid", "syphilis", "granuloma_inguinale"),
+  skin_infection = "skin_infection",
+  skin_other = "skin_other",
+  uti = "uti",
+  gastrointestinal_infections = c("gastroenteritis", "h_pylori", "cholera", "clostridial_infection", "acute_intestinal_amebiasis"),
+  rare_infections = c("actinomycosis", "anthrax", "bartonellosis", "brucellosis", "listeriosis", "lyme_disease", "malaria", "plague", "psittacosis", "relapsing_fever", "rickettsial_infections", "trachoma", "tularemia", "vincent_infection", "yaws")
+)
+
+group_labels <- c(
+  rti_ear = "Ear infections", rti_other_urti = "Other upper respiratory infections",
+  rti_phrayngitis = "Pharyngitis", rti_sinusitis = "Sinusitis",
+  rti_lower = "Lower respiratory infections", chlamydial_infections = "Chlamydial infections",
+  sti_other = "Other sexually transmitted / genital infections",
+  skin_infection = "Skin infections", skin_other = "Other skin conditions",
+  uti = "Urinary tract infections", gastrointestinal_infections = "Gastrointestinal infections",
+  rare_infections = "Rare / other infections"
+)
+
+tibble(
+  `Indication group` = unname(group_labels[names(indication_groups)]),
+  `Individual indication` = map_chr(indication_groups, ~ str_c(.x, collapse = ", "))
+) |>
+  visTable(type = "flextable")
+```
+
+
+
+## Table of indication frequencies
+
+```{r}
+indicationsTable <- importSummarisedResult(here("Results",  c("table_one_marketscan.csv", "table_one_medicaid.csv"))) |>
+  filter(
+    variable_name %in% c(
+     "Indications [LMP-90, LMP+90]", "Indications [LMP-90, LMP-1]", "Indications [LMP, LMP+90]" 
+    )
+  ) |>
+  mutate(
+    cdm_name = factor(cdm_name, c("Medicaid", "MarketScan")),
+    variable_name = factor(variable_name, c("Indications [LMP-90, LMP+90]", "Indications [LMP-90, LMP-1]", "Indications [LMP, LMP+90]"), c("[LMP-90, LMP+90]", "[LMP-90, LMP-1]", "[LMP, LMP+90]"))
+  ) |>
+  arrange(cdm_name, group_level, variable_level, variable_name) 
+
+indicationsTable |>
+  visOmopTable(
+    type = "flextable",
+    estimateName = c(
+      "N (%)" = "<count> (<percentage>)",
+      "N" = "<count>",
+      "Median [Q25 - Q75]" = "<median> [<q25> - <q75>]",
+      "Mean (SD)" = "<mean> (<sd>)",
+      "Range: Min-Max" = "<min> - <max>"
+    ),
+    header = c("cdm_name", "exposure"),
+    rename = c("Window" = "variable_name", "Indication group" = "variable_level"),
+    columnOrder = c("cdm_name", "exposure", "variable_level", "variable_name")
+  )
+```
+
+# Plots
+
+```{r, fig.height=10, fig.width=7}
+indicationsPlot <- indicationsTable |>
+  filter(
+    variable_name %in% c("[LMP-90, LMP-1]", "[LMP, LMP+90]")
+  ) |>
+  tidy()
+
+indicationsPlot |>
+  ggplot(aes(x = variable_name, y = percentage, color = exposure, fill = exposure)) +
+  geom_col(position = "dodge") +
+  facet_grid(rows = vars(variable_level), cols = vars(cdm_name), scales = "free")
+```

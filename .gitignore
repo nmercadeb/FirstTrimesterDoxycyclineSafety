@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+**/Data/*
+**/Results/**/*.csv
+**/Results/**/*.rds
+**/Analysis/*.docx
+*.txt
+*.log
+*.zip
+tbss.R

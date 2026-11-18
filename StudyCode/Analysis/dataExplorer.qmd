@@ -1,0 +1,157 @@
+---
+title: "Doxycicline Data Explorer"
+format: docx
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+library(haven)
+library(dplyr)
+library(tidyr)
+library(PatientProfiles)
+library(visOmopResults)
+library(here)
+library(readxl)
+library(omopgenerics)
+
+dataFolder <- "/storage/home/nm1242/doxycyclineSafety/Data"
+marketscan <- read_sas(here(dataFolder, "master_file_3subgroups_marketscan_oct26.sas7bdat"), NULL)
+medicaid <- read_sas(here(dataFolder, "master_file_3subgroups_medicaid_oct26.sas7bdat"), NULL)
+```
+
+# Cohort Size and Columns
+
+Medicaid cohort table has `r nrow(medicaid)` rows and `r ncol(medicaid)` columns, while MarketScan has `r nrow(marketscan)` and `r ncol(marketscan)`, respectively.
+
+## Columns in cohorts
+Column names grouped into different categories. En-dash indicates that the variables is not present for that data source (highlighted rows).
+
+```{r}
+all <- c(colnames(medicaid), colnames(marketscan)) |>
+  unique() |>
+  sort()
+
+categories <- list(
+  "Identification columns" = c(
+    "MotherId", "pregnancy_id", "exposure", "exposure_start", 
+    "exposure_end", "IndexDt", "lmp_art"
+  ),
+  "Age" = all[grepl("age|Age", all)],
+  "Infant sex" = all[grepl("Infant_", all)],
+  "Obstetric conditions" = c("OCS", "OCS_0", "OCS_1", "OCS_2", "OCS_GE3", "repeated_preg"),
+  "Race" = all[grepl("race", all)],
+  "State/Region" = all[grepl("region|state", all)],
+  "Substance Use/Abuse" = c("alcohol_abuse", "smoking", "substance_abuse"),
+  "Delivery year" = all[grepl("year|Year", all)],
+  "Conditions" = c(
+    "anemia", "diabetes_pregest", "epilepsy_convulsions",
+    "hypertension_pregest", "obesity_overweight",
+    "renal_disease", "thyroid_disease", "anxiety", "depression"
+  ),
+  "Medications" = c(
+    "acetaminophen", "antidiabetics", "antihypertensives",
+    "corticosteroids", "folate_suppl", "immunosuppressant",
+    "insulin", "nsaids", "teratogen_suspected"
+  ),
+  "Indications ([LMP-90, LMP-1])" = all[grepl("w1", all)],
+  "Indications ([LMP, LMP+90])" = all[grepl("w2", all)],
+  "Healthcare utilization" = all[grepl("Num", all)],
+  "Outcomes" =  c('Abdominal_Wall', 'ASD', 'AV_Septal_Defect', 'Cardiac', 'Central_Nervous_System', 'Cleft_Lip_All', 'Cleft_Palate_Alone', 'Conotruncal_Defects', 'depression', 'Ear_Anomalies', 'Eye_Anomalies', 'Gastrointestinal', 'Genital', 'Hypospadias', 'Limb_defects', 'MAIN_Malform_Overall', 'Musculoskeletal', 'Oral_cleft', 'Oral_cleft_New_2', 'Other', 'Other_vascular', 'PDA', 'Respiratory_malformations', 'Single_Ventricle', 'Urinary', 'Ventricular_Septal_Defect')
+)
+
+# Create category/column table
+result <- purrr::imap_dfr(
+  categories,
+  \(columns, category) {
+    tibble::tibble(
+      category = category,
+      columns = columns
+    )
+  }
+) |>
+  dplyr::mutate(
+    "Missing rows, N(%)\nMedicaid" = purrr::map_dbl(
+      columns,
+      \(col) {
+        if (!col %in% names(medicaid)) {
+          NA_real_
+        } else {
+          mean(is.na(medicaid[[col]])) * 100
+        }
+      }
+    ),
+    "Missing rows, N(%)\nMarketScan" = purrr::map_dbl(
+      columns,
+      \(col) {
+        if (!col %in% names(marketscan)) {
+          NA_real_
+        } else {
+          mean(is.na(marketscan[[col]])) * 100
+        }
+      }
+    )
+  )
+
+result |>
+  rename("Columns" = "columns", "Category" = "category") |>
+  formatTable(type = "flextable")
+
+```
+
+
+## Differences with requested 
+
+```{r}
+requestedCovariates <- read_xlsx(path = here(dataFolder, "Doxycycline_variables_10282025.xlsx"), sheet = "Covariates")
+requestedIndications <- read_xlsx(path = here(dataFolder, "Doxycycline_variables_10282025.xlsx"), sheet = "Indications_list")
+
+covariateDiff <- setdiff(tolower(requestedCovariates$Variable), tolower(all))
+indicationDiff <- setdiff(tolower(requestedIndications$Variable), gsub("w2_|w1_", "", tolower(all)))
+```
+
+**Covariates requested but not present in data:** `r paste0(covariateDiff, collapse = ", ")`
+
+**Indications requested but not present in data:** `r paste0(indicationDiff, collapse = ", ")`
+
+## Population Characteristics
+
+```{r}
+tableOne <- importSummarisedResult(here("Results",  c("table_one_marketscan.csv", "table_one_medicaid.csv")))
+tableOne |>
+  mutate(
+    cdm_name = factor(cdm_name, c("Medicaid", "MarketScan")),
+    variable_name = factor(
+      variable_name,
+      levels = c(
+        "number records", "number subjects", 
+        "age", "age_category", "infant_sex", "race", "region", "state", "ocs", "ocs_category", "repeated_preg", 
+        "Substance Use/Abuse [LMP-90, LMP+90]",
+        "Comorbidities [LMP-90, Delivery]",
+        "Medications [LMP-90, LMP+90]",
+        "num_dx3", "number_diagnosis_category",
+        "num_generics_no_antibiotic", "number_generics_no_antibiotics_category",
+        "num_out_visits_dx", "number_outpatient_visits_category",
+        "num_hosp", "number_hospitalisations_category",
+        "num_ed_visits", "number_ed_visits_category",
+        "Indications [LMP-90, LMP+90]", "Indications [LMP-90, LMP-1]", "Indications [LMP, LMP+90]",
+        "delivery_year_category", "delivery_year"
+      )
+    )
+  ) |>
+  arrange(cdm_name, group_level, variable_name, variable_level) |>
+  visOmopTable(
+    type = "flextable",
+    estimateName = c(
+      "N (%)" = "<count> (<percentage>)",
+      "N" = "<count>",
+      "Median [Q25 - Q75]" = "<median> [<q25> - <q75>]",
+      "Mean (SD)" = "<mean> (<sd>)",
+      "Range: Min-Max" = "<min> - <max>"
+    ),
+    header = c("cdm_name", "exposure")
+  )
+```
+
