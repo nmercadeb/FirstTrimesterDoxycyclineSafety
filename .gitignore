@@ -3,6 +3,7 @@
 .RData
 .Ruserdata
 **/Data/raw/*
+**/rawData/*
 **/Results/**/*.csv
 **/Results/**/*.rds
 **/Analysis/*.docx
