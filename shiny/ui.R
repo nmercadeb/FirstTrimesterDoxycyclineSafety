@@ -10,7 +10,7 @@ ui <- bslib::page_navbar(
       class = "me-3",
       alt = "logo"
     ),
-    ""
+    "Doxycycline Safety"
   ),
   theme = bslib::bs_theme(brand = TRUE),
   header = shiny::tagList(shiny::tags$link(rel = "stylesheet", href = "style.css")),
@@ -60,10 +60,10 @@ ui <- bslib::page_navbar(
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
           shinyWidgets::pickerInput(
-            inputId = "summarise_table_comparison_weights",
+            inputId = "summarise_table_comparison",
             label = "Comparison weights",
-            choices = choices$summarise_table_comparison_weights,
-            selected = selected$summarise_table_comparison_weights,
+            choices = choices$summarise_table_comparison,
+            selected = selected$summarise_table_comparison,
             multiple = TRUE,
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
@@ -126,7 +126,7 @@ ui <- bslib::page_navbar(
                     ),
                     sortable::add_rank_list(
                       text = "Hide",
-                      labels = c("weights", "comparison_weights"),
+                      labels = c("weights", "comparison"),
                       input_id = "summarise_table_table_hide"
                     )
                   ),
@@ -177,10 +177,10 @@ ui <- bslib::page_navbar(
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
           shinyWidgets::pickerInput(
-            inputId = "time_distributions_comparison_weights",
+            inputId = "time_distributions_comparison",
             label = "Comparison weights",
-            choices = choices$time_distributions_comparison_weights,
-            selected = selected$time_distributions_comparison_weights,
+            choices = choices$time_distributions_comparison ,
+            selected = selected$time_distributions_comparison ,
             multiple = TRUE,
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
@@ -232,12 +232,12 @@ ui <- bslib::page_navbar(
                     inputId = "time_distributions_plot_scale",
                     label = "Scale",
                     choices = c("gestational_week", "calendar_year"),
-                    selected = "calendar_year"
+                    selected = "gestational_week"
                   ),
                   shinyWidgets::pickerInput(
                     inputId = "time_distributions_plot_color",
                     label = "Color",
-                    choices = c("cdm_name", "exposure", "comparison_weights", "weights"),
+                    choices = c("cdm_name", "exposure", "comparison", "weights"),
                     selected = "exposure",
                     multiple = TRUE,
                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
@@ -245,7 +245,7 @@ ui <- bslib::page_navbar(
                   shinyWidgets::pickerInput(
                     inputId = "time_distributions_plot_facet",
                     label = "Facet",
-                    choices = c("cdm_name", "exposure", "comparison_weights", "weights"),
+                    choices = c("cdm_name", "exposure", "comparison", "weights"),
                     selected = "cdm_name",
                     multiple = TRUE,
                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
@@ -446,18 +446,10 @@ ui <- bslib::page_navbar(
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
           shinyWidgets::pickerInput(
-            inputId = "propensity_score_coefficients_cohort_name_reference",
-            label = "Cohort name reference",
-            choices = choices$propensity_score_coefficients_cohort_name_reference,
-            selected = selected$propensity_score_coefficients_cohort_name_reference,
-            multiple = TRUE,
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
-          ),
-          shinyWidgets::pickerInput(
-            inputId = "propensity_score_coefficients_cohort_name_comparator",
-            label = "Cohort name comparator",
-            choices = choices$propensity_score_coefficients_cohort_name_comparator,
-            selected = selected$propensity_score_coefficients_cohort_name_comparator,
+            inputId = "propensity_score_coefficients_comparison",
+            label = "Comparison",
+            choices = choices$propensity_score_coefficients_comparison,
+            selected = selected$propensity_score_coefficients_comparison,
             multiple = TRUE,
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
@@ -496,8 +488,8 @@ ui <- bslib::page_navbar(
                   shinyWidgets::pickerInput(
                     inputId = "propensity_score_coefficients_tidy_columns",
                     label = "Columns",
-                    choices = c("cdm_name", "cohort_name_reference", "cohort_name_comparator", "variable_name", "variable_level"),
-                    selected = c("cdm_name", "cohort_name_reference", "cohort_name_comparator", "variable_name", "variable_level"),
+                    choices = c("cdm_name", "comparison", "variable_name", "variable_level"),
+                    selected = c("cdm_name", "comparison", "variable_name", "variable_level"),
                     multiple = TRUE,
                     options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
                   ),
@@ -546,7 +538,7 @@ ui <- bslib::page_navbar(
           ),
           shinyWidgets::pickerInput(
             inputId = "propensity_score_distribution_comparison",
-            label = "Cohort name reference",
+            label = "Comparison",
             choices = choices$outcome_model_comparison,
             selected = selected$outcome_model_comparison,
             multiple = TRUE,
@@ -659,24 +651,16 @@ ui <- bslib::page_navbar(
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
           shinyWidgets::pickerInput(
-            inputId = "propensity_score_weight_distribution_cohort_name_reference",
-            label = "Cohort name reference",
-            choices = choices$propensity_score_weight_distribution_cohort_name_reference,
-            selected = selected$propensity_score_weight_distribution_cohort_name_reference,
-            multiple = TRUE,
-            options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
-          ),
-          shinyWidgets::pickerInput(
-            inputId = "propensity_score_weight_distribution_cohort_name_comparator",
-            label = "Cohort name comparator",
-            choices = choices$propensity_score_weight_distribution_cohort_name_comparator,
-            selected = selected$propensity_score_weight_distribution_cohort_name_comparator,
+            inputId = "propensity_score_weight_distribution_comparison",
+            label = "Comparison",
+            choices = choices$propensity_score_weight_distribution_comparison,
+              selected = selected$propensity_score_weight_distribution_comparison,
             multiple = TRUE,
             options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
           ),
           shinyWidgets::pickerInput(
             inputId = "propensity_score_weight_distribution_ps_stratum",
-            label = "Ps stratum",
+            label = "PS stratum",
             choices = choices$propensity_score_weight_distribution_ps_stratum,
             selected = selected$propensity_score_weight_distribution_ps_stratum,
             multiple = TRUE,
@@ -701,39 +685,39 @@ ui <- bslib::page_navbar(
           position = "left"
         ),
         bslib::navset_card_tab(
-          bslib::nav_panel(
-            title = "Tidy",
-            bslib::card(
-              full_screen = TRUE,
-              bslib::card_header(
-                bslib::popover(
-                  shiny::icon("download"),
-                  shiny::downloadButton(outputId = "propensity_score_weight_distribution_tidy_download", label = "Download csv")
-                ),
-                class = "text-end"
-              ),
-              bslib::layout_sidebar(
-                sidebar = bslib::sidebar(
-                  shinyWidgets::pickerInput(
-                    inputId = "propensity_score_weight_distribution_tidy_columns",
-                    label = "Columns",
-                    choices = c("cdm_name", "cohort_name_reference", "cohort_name_comparator", "ps_stratum", "variable_name", "variable_level"),
-                    selected = c("cdm_name", "cohort_name_reference", "cohort_name_comparator", "ps_stratum", "variable_name", "variable_level"),
-                    multiple = TRUE,
-                    options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
-                  ),
-                  shiny::checkboxInput(
-                    inputId = "propensity_score_weight_distribution_tidy_pivot_estimates",
-                    label = "Pivot estimates",
-                    value = TRUE
-                  ),
-                  position = "right"
-                ),
-                DT::DTOutput("propensity_score_weight_distribution_tidy") |>
-                  shinycssloaders::withSpinner()
-              )
-            )
-          ),
+          # bslib::nav_panel(
+          #   title = "Tidy",
+          #   bslib::card(
+          #     full_screen = TRUE,
+          #     bslib::card_header(
+          #       bslib::popover(
+          #         shiny::icon("download"),
+          #         shiny::downloadButton(outputId = "propensity_score_weight_distribution_tidy_download", label = "Download csv")
+          #       ),
+          #       class = "text-end"
+          #     ),
+          #     bslib::layout_sidebar(
+          #       sidebar = bslib::sidebar(
+          #         shinyWidgets::pickerInput(
+          #           inputId = "propensity_score_weight_distribution_tidy_columns",
+          #           label = "Columns",
+          #           choices = c("cdm_name", "comparison", "ps_stratum", "variable_name", "variable_level"),
+          #           selected = c("cdm_name", "comparison", "ps_stratum", "variable_name", "variable_level"),
+          #           multiple = TRUE,
+          #           options = list(`actions-box` = TRUE, size = 10, `selected-text-format` = "count > 3", `live-search` = TRUE)
+          #         ),
+          #         shiny::checkboxInput(
+          #           inputId = "propensity_score_weight_distribution_tidy_pivot_estimates",
+          #           label = "Pivot estimates",
+          #           value = TRUE
+          #         ),
+          #         position = "right"
+          #       ),
+          #       DT::DTOutput("propensity_score_weight_distribution_tidy") |>
+          #         shinycssloaders::withSpinner()
+          #     )
+          #   )
+          # ),
           bslib::nav_panel(
             title = "Table",
             bslib::card(
@@ -759,22 +743,22 @@ ui <- bslib::page_navbar(
                     header = NULL,
                     sortable::add_rank_list(
                       text = "None",
-                      labels = c("cdm_name", "cohort_name_reference", "cohort_name_comparator", "ps_stratum", "variable_name", "variable_level", "estimate_name"),
+                      labels = c("estimate_name"),
                       input_id = "propensity_score_weight_distribution_table_none"
                     ),
                     sortable::add_rank_list(
                       text = "Header",
-                      labels = character(),
+                      labels = c("cdm_name", "variable_name"),
                       input_id = "propensity_score_weight_distribution_table_header"
                     ),
                     sortable::add_rank_list(
                       text = "Group columns",
-                      labels = character(),
+                      labels = c("comparison"),
                       input_id = "propensity_score_weight_distribution_table_group_column"
                     ),
                     sortable::add_rank_list(
                       text = "Hide",
-                      labels = character(),
+                      labels = c("ps_stratum", "variable_level"),
                       input_id = "propensity_score_weight_distribution_table_hide"
                     )
                   ),

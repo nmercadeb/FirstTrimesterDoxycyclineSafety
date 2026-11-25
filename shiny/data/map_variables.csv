@@ -34,18 +34,6 @@ age,NA,Maternal age,NA
 "lmp_year_ps[2015,2020)",NA,LMP calendar period,"[2015,2020)"
 "lmp_year_ps[2020,2025)",NA,LMP calendar period,"[2020,2025)"
 "lmp_year_ps[2025,2030)",NA,LMP calendar period,"[2025,2030)"
-"exposure_start_gw_ps[-77,-63)",NA,Gestational timing (PS categories),"[-77,-63)"
-"exposure_start_gw_ps[-63,-49)",NA,Gestational timing (PS categories),"[-63,-49)"
-"exposure_start_gw_ps[-49,-35)",NA,Gestational timing (PS categories),"[-49,-35)"
-"exposure_start_gw_ps[-35,-21)",NA,Gestational timing (PS categories),"[-35,-21)"
-"exposure_start_gw_ps[-21,-7)",NA,Gestational timing (PS categories),"[-21,-7)"
-"exposure_start_gw_ps[-7,7)",NA,Gestational timing (PS categories),"[-7,7)"
-"exposure_start_gw_ps[7,21)",NA,Gestational timing (PS categories),"[7,21)"
-"exposure_start_gw_ps[21,35)",NA,Gestational timing (PS categories),"[21,35)"
-"exposure_start_gw_ps[35,49)",NA,Gestational timing (PS categories),"[35,49)"
-"exposure_start_gw_ps[49,63)",NA,Gestational timing (PS categories),"[49,63)"
-"exposure_start_gw_ps[63,77)",NA,Gestational timing (PS categories),"[63,77)"
-"exposure_start_gw_ps[77,91)",NA,Gestational timing (PS categories),"[77,91)"
 regionne,NA,US region,Northeast
 regions,NA,US region,South
 regionunknown,NA,US region,Unknown
@@ -1767,6 +1755,7 @@ state,wy,State,Wyoming
 "Indications [LMP-90, LMP-1]",rare_infections,"Indications [LMP-90, LMP-1]",Rare infections
 "Indications [LMP, LMP+90]",rare_infections,"Indications [LMP, LMP+90]",Rare infections
 "Indications [LMP-90, LMP+90]",rare_infections,"Indications [LMP-90, LMP+90]",Rare infections
+exposure_start_gestational_day,NA,Exposure Start Gestational Day,NA
 exposure_days,NA,Exposure duration (days),NA
 exposure_start_gestational_week,Week -1,exposure_start_gestational_week,Week -1
 exposure_start_gestational_week,Week -11,exposure_start_gestational_week,Week -11
@@ -1788,17 +1777,6 @@ exposure_start_gestational_week,Week 6,exposure_start_gestational_week,Week 6
 exposure_start_gestational_week,Week 7,exposure_start_gestational_week,Week 7
 exposure_start_gestational_week,Week 8,exposure_start_gestational_week,Week 8
 exposure_start_gestational_week,Week 9,exposure_start_gestational_week,Week 9
-exposure_start_gw_ps,"[-21,-7)",Gestational timing (PS categories),"[-21,-7)"
-exposure_start_gw_ps,"[-35,-21)",Gestational timing (PS categories),"[-35,-21)"
-exposure_start_gw_ps,"[-49,-35)",Gestational timing (PS categories),"[-49,-35)"
-exposure_start_gw_ps,"[-7,7)",Gestational timing (PS categories),"[-7,7)"
-exposure_start_gw_ps,"[-77,-63)",Gestational timing (PS categories),"[-77,-63)"
-exposure_start_gw_ps,"[21,35)",Gestational timing (PS categories),"[21,35)"
-exposure_start_gw_ps,"[35,49)",Gestational timing (PS categories),"[35,49)"
-exposure_start_gw_ps,"[49,63)",Gestational timing (PS categories),"[49,63)"
-exposure_start_gw_ps,"[63,77)",Gestational timing (PS categories),"[63,77)"
-exposure_start_gw_ps,"[7,21)",Gestational timing (PS categories),"[7,21)"
-exposure_start_gw_ps,"[77,91)",Gestational timing (PS categories),"[77,91)"
 exposure_before_lmp,exposure_before_lmp,Exposure before LMP,NA
 lmp_year_ps,"[2000,2005)",LMP calendar period,"[2000,2005)"
 lmp_year_ps,"[2005,2010)",LMP calendar period,"[2005,2010)"
@@ -1813,9 +1791,12 @@ race,other_unknown,Race/ethnicity,Other/unknown
 race,white,Race/ethnicity,White
 exposure_start_gestational_week,Week -4,exposure_start_gestational_week,Week -4
 exposure_start_gestational_week,Week -9,exposure_start_gestational_week,Week -9
-exposure_start_gw_ps,"[-63,-49)",Gestational timing (PS categories),"[-63,-49)"
 number records,NA,Number of records,NA
 number subjects,NA,Number of subjects,NA
+number_diagnosis_category,3_4,Distinct diagnoses,3-4
+number_diagnosis_category,5_6,Distinct diagnoses,5-6
+number_diagnosis_category,ge7,Distinct diagnoses,7 or more
+number_diagnosis_category,le2,Distinct diagnoses,2 or fewer
 number_ed_visits_category,0,Emergency department visits,0
 number_ed_visits_category,1,Emergency department visits,1
 number_ed_visits_category,2,Emergency department visits,2
@@ -1832,8 +1813,6 @@ number_outpatient_visits_category,5_6,Outpatient visits,5-6
 number_outpatient_visits_category,7_10,Outpatient visits,7-10
 number_outpatient_visits_category,ge11,Outpatient visits,11 or more
 number_outpatient_visits_category,le4,Outpatient visits,4 or fewer
-lmp_year,lmp_year,LMP calendar year,lmp_year
-exposure_start_calendar_year,exposure_start_calendar_year,exposure_start_calendar_year,exposure_start_calendar_year
 raceblack,NA,Race/ethnicity,Black
 racehispanic,NA,Race/ethnicity,Hispanic
 raceother_unknown,NA,Race/ethnicity,Other/unknown

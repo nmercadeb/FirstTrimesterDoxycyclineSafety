@@ -189,8 +189,7 @@ server <- function(input, output, session) {
   }) |>
     shiny::bindEvent(
       input$propensity_score_coefficients_cdm_name,
-      input$propensity_score_coefficients_cohort_name_reference,
-      input$propensity_score_coefficients_cohort_name_comparator,
+      input$propensity_score_coefficients_comparison,
       input$propensity_score_coefficients_variable_name,
       input$propensity_score_coefficients_estimate_name,
       ignoreInit = TRUE
@@ -210,20 +209,20 @@ server <- function(input, output, session) {
   )
   
   ## get propensity_score_coefficients data
-  getPropensityScoreCoefficientsData <- shiny::eventReactive(input$update_propensity_score_coefficients,
-                                                             {
-                                                               data[["propensity_score_coefficients"]] |>
-                                                                 dplyr::filter(
-                                                                   .data$cdm_name %in% input$propensity_score_coefficients_cdm_name,
-                                                                   .data$variable_name %in% input$propensity_score_coefficients_variable_name,
-                                                                   .data$estimate_name %in% input$propensity_score_coefficients_estimate_name
-                                                                 ) |>
-                                                                 omopgenerics::filterGroup(
-                                                                   .data$cohort_name_reference %in% input$propensity_score_coefficients_cohort_name_reference,
-                                                                   .data$cohort_name_comparator %in% input$propensity_score_coefficients_cohort_name_comparator
-                                                                 )
-                                                             },
-                                                             ignoreInit = TRUE
+  getPropensityScoreCoefficientsData <- shiny::eventReactive(
+    input$update_propensity_score_coefficients,
+    {
+      data[["propensity_score_coefficients"]] |>
+        dplyr::filter(
+          .data$cdm_name %in% input$propensity_score_coefficients_cdm_name,
+          .data$variable_name %in% input$propensity_score_coefficients_variable_name,
+          .data$estimate_name %in% input$propensity_score_coefficients_estimate_name
+        ) |>
+        omopgenerics::filterGroup(
+          .data$comparison %in% input$propensity_score_coefficients_comparison
+        )
+    },
+    ignoreInit = TRUE
   )
   getPropensityScoreCoefficientsTidy <- shiny::reactive({
     tidyDT(getPropensityScoreCoefficientsData(), input$propensity_score_coefficients_tidy_columns, input$propensity_score_coefficients_tidy_pivot_estimates)
@@ -249,8 +248,7 @@ server <- function(input, output, session) {
   }) |>
     shiny::bindEvent(
       input$propensity_score_distribution_cdm_name,
-      input$propensity_score_distribution_cohort_name_reference,
-      input$propensity_score_distribution_cohort_name_comparator,
+      input$propensity_score_distribution_comparison,
       input$propensity_score_distribution_variable_name,
       input$propensity_score_distribution_estimate_name,
       ignoreInit = TRUE
@@ -279,8 +277,7 @@ server <- function(input, output, session) {
           .data$variable_name %in% input$propensity_score_distribution_variable_name
         ) |>
         omopgenerics::filterGroup(
-          .data$cohort_name_reference %in% input$propensity_score_distribution_cohort_name_reference,
-          .data$cohort_name_comparator %in% input$propensity_score_distribution_cohort_name_comparator
+          .data$comparison %in% input$propensity_score_distribution_comparison
         )
     },
     ignoreInit = TRUE
@@ -295,7 +292,9 @@ server <- function(input, output, session) {
         ribbon = FALSE, 
         facet = input$propensity_score_distribution_plot_ps_facet, 
         colour = input$propensity_score_distribution_plot_ps_color
-      )
+      ) +
+      xlab("Propensity Score") +
+      ylab("Density")
   })
   
   # Static plot
@@ -348,8 +347,7 @@ server <- function(input, output, session) {
   }) |>
     shiny::bindEvent(
       input$propensity_score_weight_distribution_cdm_name,
-      input$propensity_score_weight_distribution_cohort_name_reference,
-      input$propensity_score_weight_distribution_cohort_name_comparator,
+      input$propensity_score_weight_distribution_comparison,
       input$propensity_score_weight_distribution_ps_stratum,
       input$propensity_score_weight_distribution_variable_name,
       input$propensity_score_weight_distribution_estimate_name,
@@ -370,21 +368,21 @@ server <- function(input, output, session) {
   )
   
   ## get propensity_score_weight_distribution data
-  getPropensityScoreWeightDistributionData <- shiny::eventReactive(input$update_propensity_score_weight_distribution,
-                                                                   {
-                                                                     data[["propensity_score_weight_distribution"]] |>
-                                                                       dplyr::filter(
-                                                                         .data$cdm_name %in% input$propensity_score_weight_distribution_cdm_name,
-                                                                         .data$variable_name %in% input$propensity_score_weight_distribution_variable_name,
-                                                                         .data$estimate_name %in% input$propensity_score_weight_distribution_estimate_name
-                                                                       ) |>
-                                                                       omopgenerics::filterGroup(
-                                                                         .data$cohort_name_reference %in% input$propensity_score_weight_distribution_cohort_name_reference,
-                                                                         .data$cohort_name_comparator %in% input$propensity_score_weight_distribution_cohort_name_comparator
-                                                                       ) |>
-                                                                       omopgenerics::filterStrata(.data$ps_stratum %in% input$propensity_score_weight_distribution_ps_stratum)
-                                                                   },
-                                                                   ignoreInit = TRUE
+  getPropensityScoreWeightDistributionData <- shiny::eventReactive(
+    input$update_propensity_score_weight_distribution,
+    {
+      data[["propensity_score_weight_distribution"]] |>
+        dplyr::filter(
+          .data$cdm_name %in% input$propensity_score_weight_distribution_cdm_name,
+          .data$variable_name %in% input$propensity_score_weight_distribution_variable_name,
+          .data$estimate_name %in% input$propensity_score_weight_distribution_estimate_name
+        ) |>
+        omopgenerics::filterGroup(
+          .data$comparison %in% input$propensity_score_weight_distribution_comparison
+        ) |>
+        omopgenerics::filterStrata(.data$ps_stratum %in% input$propensity_score_weight_distribution_ps_stratum)
+    },
+    ignoreInit = TRUE
   )
   getPropensityScoreWeightDistributionTidy <- shiny::reactive({
     tidyDT(getPropensityScoreWeightDistributionData(), input$propensity_score_weight_distribution_tidy_columns, input$propensity_score_weight_distribution_tidy_pivot_estimates)
@@ -402,7 +400,15 @@ server <- function(input, output, session) {
   )
   getPropensityScoreWeightDistributionTable <- shiny::reactive({
     getPropensityScoreWeightDistributionData() |>
-      simpleTable(
+      visOmopTable(
+        estimateName = c(
+          "N" = "<count>",
+          "ESS" = "<effective_sample_size>",
+          "Weights, Sum" = "<sum_weights>",
+          "Weights, Mean (SD)" = "<mean_weight> (<sd_weight>)",
+          "Weights, Median (IQR)" = "<median_weight> (<q25_weight> - <q75_weight>)",
+          "Weights, Min-Max" = "<min_weight> - <max_weight>"
+        ),
         header = input$propensity_score_weight_distribution_table_header,
         group = input$propensity_score_weight_distribution_table_group_column,
         hide = input$propensity_score_weight_distribution_table_hide
@@ -554,7 +560,7 @@ server <- function(input, output, session) {
     shiny::bindEvent(
       input$summarise_table_cdm_name,
       input$summarise_table_exposure,
-      input$summarise_table_comparison_weights,
+      input$summarise_table_comparison,
       input$summarise_table_variable_name,
       input$summarise_table_estimate_name,
       ignoreInit = TRUE
@@ -574,18 +580,19 @@ server <- function(input, output, session) {
   )
   
   ## get summarise_table data
-  getSummariseTableData <- shiny::eventReactive(input$update_summarise_table,
-                                                {
-                                                  data[["summarise_table"]] |>
-                                                    dplyr::filter(
-                                                      .data$cdm_name %in% input$summarise_table_cdm_name,
-                                                      .data$variable_name %in% input$summarise_table_variable_name,
-                                                      .data$estimate_name %in% input$summarise_table_estimate_name
-                                                    ) |>
-                                                    omopgenerics::filterGroup(.data$exposure %in% input$summarise_table_exposure) |>
-                                                    omopgenerics::filterStrata(.data$comparison_weights %in% input$summarise_table_comparison_weights)
-                                                },
-                                                ignoreInit = TRUE
+  getSummariseTableData <- shiny::eventReactive(
+    input$update_summarise_table,
+    {
+      data[["summarise_table"]] |>
+        dplyr::filter(
+          .data$cdm_name %in% input$summarise_table_cdm_name,
+          .data$variable_name %in% input$summarise_table_variable_name,
+          .data$estimate_name %in% input$summarise_table_estimate_name
+        )  |>
+        omopgenerics::filterGroup(.data$exposure %in% input$summarise_table_exposure) |>
+        omopgenerics::filterStrata(.data$comparison %in% input$summarise_table_comparison)
+    },
+    ignoreInit = TRUE
   )
   getSummariseTableTable <- shiny::reactive({
     getSummariseTableData() |>
@@ -595,25 +602,25 @@ server <- function(input, output, session) {
           variable_level,
           levels = c(
             NA_character_,
-            
+
             # Infant sex
             "Female",
             "Male",
             "Unknown",
-            
+
             # Race/ethnicity
             "White",
             "Black",
             "Hispanic",
             "Asian/Pacific Islander",
             "Other/unknown",
-            
+
             # US region
             "Northeast",
             "Midwest",
             "South",
             "West",
-            
+
             # States (alphabetical)
             "Alabama", "Alaska", "Arizona", "Arkansas",
             "California", "Colorado", "Connecticut",
@@ -631,20 +638,23 @@ server <- function(input, output, session) {
             "South Dakota", "Tennessee", "Texas",
             "Utah", "Vermont", "Virginia", "Washington",
             "West Virginia", "Wisconsin", "Wyoming",
-            
+
             # Numeric categories
             "0",
             "1",
             "2",
+            "2 or fewer",
+            "3-4",
             "3 or more",
             "4 or fewer",
             "5-6",
             "7-10",
+            "7 or more",
             "11 or more",
-            
+
             # Gestational weeks
             paste("Week", -11:12),
-            
+
             # Gestational timing categories
             "[-77,-63)",
             "[-63,-49)",
@@ -658,14 +668,14 @@ server <- function(input, output, session) {
             "[49,63)",
             "[63,77)",
             "[77,91)",
-            
+
             # Calendar periods
             "[2000,2005)",
             "[2005,2010)",
             "[2010,2015)",
             "[2015,2020)",
             "[2020,2025)",
-            
+
             # Maternal comorbidities
             "Anemia",
             "Anxiety",
@@ -676,12 +686,12 @@ server <- function(input, output, session) {
             "Thyroid disease",
             "Renal disease",
             "Epilepsy or convulsions",
-            
+
             # Substance use
             "Smoking",
             "Alcohol abuse",
             "Substance abuse",
-            
+
             # Medications
             "Acetaminophen",
             "Antidiabetic medications",
@@ -692,7 +702,7 @@ server <- function(input, output, session) {
             "Insulin",
             "Nonsteroidal anti-inflammatory drugs (NSAIDs)",
             "Suspected teratogenic medications",
-            
+
             # Indications: respiratory infections
             "Ear infections",
             "Pharyngitis",
@@ -700,7 +710,7 @@ server <- function(input, output, session) {
             "Pneumonia",
             "Other upper respiratory tract infections",
             "Other lower respiratory tract infections",
-            
+
             # Indications: other infections
             "Urinary tract infections",
             "Gastrointestinal infections",
@@ -709,7 +719,7 @@ server <- function(input, output, session) {
             "Chlamydial infections",
             "Other sexually transmitted infections",
             "Rare infections",
-            
+
             # Non-categorical level identifiers
             "lmp_year",
             "exposure_start_year"
@@ -750,8 +760,8 @@ server <- function(input, output, session) {
     shiny::bindEvent(
       input$time_distributions_cdm_name,
       input$time_distributions_exposure,
-      input$time_distributions_comparison_weights,
-      input$time_distributions_plot_scale,
+      input$time_distributions_comparison,
+      # input$time_distributions_plot_scale,
       ignoreInit = TRUE
     )
   shiny::observeEvent(
@@ -778,8 +788,22 @@ server <- function(input, output, session) {
           .data$estimate_name %in% "count"
         ) |>
         omopgenerics::filterGroup(.data$exposure %in% input$time_distributions_exposure) |>
-        omopgenerics::filterStrata(.data$comparison_weights %in% input$time_distributions_comparison_weights) |>
-        omopgenerics::tidy() 
+        omopgenerics::filterStrata(.data$comparison %in% input$time_distributions_comparison) |>
+        omopgenerics::tidy()
+      print(input$time_distributions_plot_scale)
+      print(input$time_distributions_cdm_name)
+      print(input$time_distributions_exposure)
+      print(input$time_distributions_comparison)
+      print(
+        data[["time_distributions"]] |>
+          dplyr::filter(
+            .data$cdm_name %in% input$time_distributions_cdm_name,
+            .data$estimate_name %in% "count"
+          ) |>
+          omopgenerics::filterGroup(.data$exposure %in% input$time_distributions_exposure) |>
+          omopgenerics::filterStrata(.data$comparison %in% input$time_distributions_comparison) |>
+          omopgenerics::tidy()
+      )
     },
     ignoreInit = TRUE
   )
@@ -789,23 +813,23 @@ server <- function(input, output, session) {
     ignoreInit = TRUE
   )
   getTimeDistributionsPlot <- shiny::reactive({
-    getTimeDistributionsData() |> 
-      dplyr::filter(.data$variable_name %in% paste0("exposure_start_", input$time_distributions_plot_scale)) |>
+    getTimeDistributionsData() |>
+      # dplyr::filter(.data$variable_name %in% paste0("exposure_start_", input$time_distributions_plot_scale)) |>
       visOmopResults::barPlot(
-        x = "variable_level", 
-        y = "count", 
-        facet = input$time_distributions_plot_facet, 
+        x = "variable_level",
+        y = "count",
+        facet = input$time_distributions_plot_facet,
         colour = input$time_distributions_plot_color
       ) +
-      xlab(customiseText(input$update_time_distributions)) +
+      xlab(customiseText(input$time_distributions_plot_scale)) +
       theme(axis.text.x = element_text(angle = 45, hjust = 1, vjust = 1))
   })
-  
+
   # Static plot renderer ----
   output$time_distributions_static <- shiny::renderPlot({
     getTimeDistributionsPlot()
   }, height = 400)
-  
+
   # Interactive plot renderer ----
   output$time_distributions_interactive <- plotly::renderPlotly({
     plotly::ggplotly(
@@ -813,7 +837,7 @@ server <- function(input, output, session) {
       height = 400
     )
   })
-  
+
   output$time_distributions_plot <- shiny::renderUI({
     if (isTRUE(input$time_distributions_plot_interactive)) {
       plotly::plotlyOutput(
@@ -827,7 +851,6 @@ server <- function(input, output, session) {
       )
     }
   })
-  
   output$time_distributions_plot_download <- shiny::downloadHandler(
     filename = "plot_time_zero.png",
     content = function(file) {

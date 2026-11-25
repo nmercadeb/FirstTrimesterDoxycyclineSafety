@@ -432,7 +432,7 @@ getSelected <- function(choices) {
       return(vals[[1]])
     }
     
-    if (grepl("comparison_weights$", nm)) {
+    if (grepl("comparison$", nm)) {
       return("none")
     }
 
